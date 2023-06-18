@@ -3,16 +3,14 @@ import { FavoritesCitiesContainer, SectionTitle } from './styles'
 import { motion } from 'framer-motion'
 import { FavoriteCity } from './FavoriteCity'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
+import { getFavoriteCities } from '../../store/selectors/favoritesSelectors'
 import { lightTheme } from '../../styles/theme'
 
 const FavoriteCities: React.FC<{
   favorites: City[]
   onRemoveFavorite: (city: City) => void
 }> = ({ onRemoveFavorite }) => {
-  const favoritesCities: City[] = useSelector(
-    (state: RootState) => state.favorites.favorites
-  )
+  const favoritesCities: City[] = useSelector(getFavoriteCities)
 
   return (
     <motion.div
