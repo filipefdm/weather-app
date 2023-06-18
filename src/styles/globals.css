@@ -12,10 +12,10 @@ html {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
   justify-content: center;
   min-height: 100vh;
-  background: url("../assets/darkBg.svg") no-repeat center 120%;
+  background: url('../assets/bg.svg') no-repeat center 120%, linear-gradient(#FFFFFF 0%, #38C8E6 100%);
   background-size: auto;
 }
