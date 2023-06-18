@@ -3,6 +3,7 @@ import { City } from '../../types/weatherTypes'
 import { useDispatch } from 'react-redux'
 import { removeFavorite } from '../../store/slices/favoritesSlice'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { AppDispatch } from '../../store/store'
 
 interface FavoriteCityProps {
   favorite: City
@@ -10,7 +11,7 @@ interface FavoriteCityProps {
 }
 
 export const FavoriteCity: React.FC<FavoriteCityProps> = ({ favorite }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   const handleRemoveFavorite = () => {
     dispatch(removeFavorite(favorite.id))
@@ -29,7 +30,7 @@ export const FavoriteCity: React.FC<FavoriteCityProps> = ({ favorite }) => {
         bgcolor: '#f8f8f8',
       }}
     >
-      <Typography variant="body1" sx={{ marginRight: 2 }}>
+      <Typography variant="inherit" sx={{ marginRight: 2 }}>
         {favorite.name}
       </Typography>
       <Button
