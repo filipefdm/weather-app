@@ -8,7 +8,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 import { addFavorite } from '../../store/slices/favoritesSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
+import { getFavorites } from '../../store/selectors/searchHistorySelectors'
+import { AppDispatch } from '../../store/store'
+
 import { lightTheme } from '../../styles/theme'
 
 interface SearchHistoryProps {
@@ -18,8 +20,8 @@ interface SearchHistoryProps {
 }
 
 const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
-  const dispatch = useDispatch()
-  const favorites = useSelector((state: RootState) => state.favorites.favorites)
+  const dispatch = useDispatch<AppDispatch>()
+  const favorites = useSelector(getFavorites)
 
   const handleAddFavorite = (city: City) => {
     dispatch(addFavorite(city))
@@ -55,7 +57,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
                 boxShadow={1}
                 bgcolor="transparent"
               >
-                <Typography variant="body1">{city.name}</Typography>
+                <Typography variant="inherit">{city.name}</Typography>
                 <Box display="flex" alignItems="center">
                   <Button
                     variant="outlined"
