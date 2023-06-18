@@ -9,7 +9,6 @@
     "lint": "next lint",
     "eslint:format": "eslint . --ext ts --ext tsx --ext js",
     "test": "vitest",
-    "coverage": "jest --coverage",
     "cypress:open": "cypress open",
     "e2e": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\"",
     "e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\"",
