@@ -31,8 +31,11 @@ import Temperature from './Temperature'
 
 import ToggleSwitch from '../ui/ToggleSwitch/ToggleSwitch'
 
-import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../store/store'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeTempUnit } from '../../store/slices/appReducer'
+import { getTempUnit } from '@/store/selectors/appSelectors'
+
 import { lightTheme } from '../../styles/theme'
 
 interface WeatherCardProps {
@@ -42,7 +45,7 @@ interface WeatherCardProps {
 const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
   const { main, name, wind } = weatherData
   const dateTime = useCurrentDateTime()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   const weatherIconUrl = `http://openweathermap.org/img/wn/${weatherData?.weather?.[0].icon}.png`
 
@@ -74,7 +77,13 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
       transition={{ duration: 0.5 }}
     >
       <WeatherContainer theme={lightTheme}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <SectionTitle theme={lightTheme}>Clima Atual</SectionTitle>
           <div>
             <DateTime theme={lightTheme}>{dateTime}</DateTime>
