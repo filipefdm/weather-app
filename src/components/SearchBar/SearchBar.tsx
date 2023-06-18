@@ -1,22 +1,23 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { RootState, AppDispatch } from '../../store/store'
+import { AppDispatch } from '../../store/store'
 import { setCity, clearCity } from '../../store/slices/searchBarSlice'
+import { getSearchBarCity } from '../../store/selectors/searchBarSelectors'
 
-import { Box, Button, InputBase, InputAdornment } from '@mui/material'
+import { Button, InputAdornment } from '@mui/material'
+import { SearchElement, SearchInput } from './styles'
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching'
 import SearchIcon from '@mui/icons-material/Search'
 
-import { useStyles } from './styles'
 import { motion } from 'framer-motion'
+import { lightTheme } from '../../styles/theme'
 
 interface SearchBarProps {
   onSearch: (city: string) => void
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const city = useSelector((state: RootState) => state.searchBar.city)
+  const city = useSelector(getSearchBarCity)
   const dispatch = useDispatch<AppDispatch>()
-
-  const { classes } = useStyles()
 
   const handleSearch = () => {
     if (city.trim() !== '') {
@@ -43,29 +44,28 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       variants={searchBarVariants}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <Box className={classes.searchElement}>
-        <InputBase
+      <SearchElement theme={lightTheme}>
+        <InputAdornment position="start">
+          <SearchIcon color="primary" fontSize="medium" sx={{ ml: '2rem' }} />
+        </InputAdornment>
+        <SearchInput
+          theme={lightTheme}
           placeholder="Digite uma cidade"
           value={city}
           onChange={e => dispatch(setCity(e.target.value))}
-          className={classes.searchInput}
-          startAdornment={
-            <InputAdornment position="start">
-              <SearchIcon className={classes.searchIcon} />
-            </InputAdornment>
-          }
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
         />
         <Button
-          variant="text"
+          variant="contained"
           color="primary"
           onClick={handleSearch}
           disabled={!city.trim()}
-          className={classes.locationButton}
+          component="span"
+          sx={{ borderRadius: '5rem', mr: '1rem' }}
         >
-          Pesquisar
+          <LocationSearchingIcon />
         </Button>
-      </Box>
+      </SearchElement>
     </motion.div>
   )
 }
