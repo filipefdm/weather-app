@@ -2,10 +2,6 @@ import { GetServerSideProps } from 'next'
 import { useEffect, useState } from 'react'
 
 import { Box, Grid } from '@mui/material'
-import { CircularProgress } from '@mui/material'
-
-import { useSelector } from 'react-redux'
-import { RootState } from '../store/store'
 
 import {
   getWeatherData,
@@ -20,6 +16,7 @@ import FavoriteCities from '../components/FavoriteCities/FavoriteCities'
 import Footer from '../components/Footer/Footer'
 
 import { WeatherData, City } from '../types/weatherTypes'
+import Head from 'next/head'
 
 interface HomeProps {
   weatherData: WeatherData | null
@@ -172,13 +169,14 @@ const Home: React.FC = () => {
     localStorage.setItem('favorites', JSON.stringify(favorites))
   }
 
-  const { loading } = useSelector((state: RootState) => ({
-    loading: state.app.isLoading,
-  }))
-
   return (
     <>
-      {loading && <CircularProgress />}
+      <Head>
+        <title>Weather Application</title>
+        <meta name="description" content="Weather Application" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="favicon.ico" sizes="any" />
+      </Head>
       <Box m={2}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -215,28 +213,40 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   let searchHistory: City[] = []
   let favorites: City[] = []
 
-  // Carregar dados do clima atual da localização atual
-  if (typeof window !== 'undefined' && navigator.geolocation) {
-    const positionPromise = new Promise<Position>((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
+  try {
+    // Carregar dados do clima atual da localização atual
+    if (typeof window !== 'undefined' && navigator.geolocation) {
+      const positionPromise = new Promise<Position>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
 
-    try {
-      const position = await positionPromise
-      const { latitude, longitude } = position.coords
-      const currentLocationData = await getWeatherDataByCoordinates(
-        latitude,
-        longitude
-      )
-      weatherData = currentLocationData
-    } catch (error) {
-      console.error(
-        'Erro ao obter dados meteorológicos da localização atual:',
-        error
-      )
+      try {
+        const position = await positionPromise
+        const { latitude, longitude } = position.coords
+        const currentLocationData = await getWeatherDataByCoordinates(
+          latitude,
+          longitude
+        )
+        weatherData = currentLocationData
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(
+            'Erro ao obter dados meteorológicos da localização atual:',
+            error.message
+          )
+        } else {
+          console.error('Erro desconhecido:', error)
+        }
+      }
+    } else {
+      throw new Error('Navegador não suporta geolocalização.')
     }
-  } else {
-    console.error('Navegador não suporta geolocalização.')
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    } else {
+      console.error('Erro desconhecido:', error)
+    }
   }
 
   // Carregar histórico de busca e favoritos do local storage
