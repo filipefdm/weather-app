@@ -1,181 +1,262 @@
-import { Box, Grid } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { GetServerSideProps } from 'next'
+import { useEffect, useState } from 'react'
+
+import { Box, Grid } from '@mui/material'
+import { CircularProgress } from '@mui/material'
+
+import { useSelector } from 'react-redux'
+import { RootState } from '../store/store'
 
 import {
   getWeatherData,
   getWeatherDataByCoordinates,
-} from "@/services/weatherApi";
+} from '../services/weatherApi'
 
-import SearchBar from "@/components/SearchBar";
-import WeatherCard from "@/components/WeatherCard/WeatherCard";
-import SearchHistory from "@/components/SearchHistory";
-import Favorites from "@/components/Favorites";
+import Header from '../components/Header/Header'
+import SearchBar from '../components/SearchBar/SearchBar'
+import WeatherCard from '../components/WeatherCard/WeatherCard'
+import SearchHistory from '../components/SearchHistory/SearchHistory'
+import FavoriteCities from '../components/FavoriteCities/FavoriteCities'
+import Footer from '../components/Footer/Footer'
 
-import { WeatherData } from "@/types/weatherTypes";
-import { fetchCurrentWeatherByCity } from "@/store/thunks/fetchCurrentWeatherByCity";
-import WeeklyForecast from "@/components/WeeklyForecast";
-import { fetchCurrentWeatherData } from "@/store/thunks/fetchCurrentWeatherData";
+import { WeatherData, City } from '../types/weatherTypes'
 
-export interface City {
-  id: number;
-  name: string;
-  temperature: number;
-  description: string;
-  isFavorite: boolean;
+interface HomeProps {
+  weatherData: WeatherData | null
+  searchHistory: City[]
+  favorites: City[]
+}
+
+type Position = {
+  coords: {
+    latitude: number
+    longitude: number
+  }
 }
 
 const Home: React.FC = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [searchHistory, setSearchHistory] = useState<City[]>([]);
-  const [favorites, setFavorites] = useState<City[]>([]);
-  // const [weeklyData, setWeeklyData] = useState<WeatherData[]>([]);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
+  const [searchHistory, setSearchHistory] = useState<City[]>([])
+  const [favorites, setFavorites] = useState<City[]>([])
 
-  const dispatch = useDispatch<AppDispatch>();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const searchHistoryData = useSelector(
-    (state: RootState) => state.searchHistory.searchHistory
-  );
+  // Load search history and favorites from local storage on initial mount
+  useEffect(() => {
+    const loadSearchHistoryFromLocalStorage = () => {
+      const searchHistory = localStorage.getItem('searchHistory')
+      if (searchHistory) {
+        setSearchHistory(JSON.parse(searchHistory))
+      }
+    }
 
+    const loadFavoritesFromLocalStorage = () => {
+      const savedFavorites = localStorage.getItem('favorites')
+      if (savedFavorites) {
+        setFavorites(JSON.parse(savedFavorites))
+      }
+    }
+
+    loadSearchHistoryFromLocalStorage()
+    loadFavoritesFromLocalStorage()
+  }, [])
+
+  // Load current location weather on initial mount
+  useEffect(() => {
+    const loadCurrentLocationWeather = async () => {
+      try {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async position => {
+              const { latitude, longitude } = position.coords
+              try {
+                const currentLocationData = await getWeatherDataByCoordinates(
+                  latitude,
+                  longitude
+                )
+                setWeatherData(currentLocationData)
+              } catch (error) {
+                console.error(
+                  'Erro ao obter dados meteorológicos da localização atual:',
+                  error
+                )
+              }
+            },
+            error => {
+              console.error('Erro ao obter localização:', error)
+            }
+          )
+        } else {
+          console.error('Navegador não suporta geolocalização.')
+        }
+      } catch (error) {
+        console.error(
+          'Erro ao obter dados meteorológicos da localização atual:',
+          error
+        )
+      }
+    }
+
+    loadCurrentLocationWeather()
+  }, [])
+
+  // Handle search event
   const handleSearch = async (city: string) => {
     try {
-      const data = await getWeatherData(city);
+      const data = await getWeatherData(city)
       const newCity: City = {
         id: data.id,
         name: data.name,
         temperature: data.main.temp,
         description: data.weather[0].description,
         isFavorite: false,
-      };
-      dispatch(fetchCurrentWeatherByCity(city));
+      }
 
       const existingCity = searchHistory.find(
-        (item) => item.name === newCity.name
-      );
+        item => item.name === newCity.name
+      )
 
       if (!existingCity) {
-        setSearchHistory((prevHistory) => [...prevHistory, newCity]);
+        setSearchHistory(prevHistory => [...prevHistory, newCity])
+        saveSearchHistoryToLocalStorage([...searchHistory, newCity]) // Salvar no localStorage
       }
 
-      setWeatherData(data);
-
-      const weeklyData = await fetchCurrentWeatherData();
-      setWeeklyData(weeklyData);
+      setWeatherData(data)
     } catch (error) {
-      console.error("Erro ao obter dados meteorológicos:", error);
+      console.error('Erro ao obter dados meteorológicos:', error)
     }
-  };
+  }
 
+  // Handle add favorite event
   const handleAddFavorite = (city: City) => {
     if (city.isFavorite) {
-      setFavorites((prevFavorites) =>
-        prevFavorites.filter((item) => item.id !== city.id)
-      );
+      const updatedFavorites = favorites.filter(item => item.id !== city.id)
+      setFavorites(updatedFavorites)
+      saveFavoritesToLocalStorage(updatedFavorites) // Save to local storage
     } else {
-      setFavorites((prevFavorites) => [...prevFavorites, city]);
+      setFavorites(prevFavorites => [...prevFavorites, city])
+      saveFavoritesToLocalStorage([...favorites, city]) // Save to local storage
     }
 
-    setSearchHistory((prevHistory) =>
-      prevHistory.map((item) => {
+    setSearchHistory(prevHistory =>
+      prevHistory.map(item => {
         if (item.id === city.id) {
-          return { ...item, isFavorite: !city.isFavorite };
+          return { ...item, isFavorite: !city.isFavorite }
         }
-        return item;
+        return item
       })
-    );
-  };
+    )
+  }
 
+  // Handle remove favorite event
   const handleRemoveFavorite = (city: City) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.filter((item) => item.id !== city.id)
-    );
-  };
+    const updatedFavorites = favorites.filter(item => item.id !== city.id)
+    setFavorites(updatedFavorites)
+    saveFavoritesToLocalStorage(updatedFavorites) // Save to local storage
 
-  useEffect(() => {
-    const loadCurrentLocationWeather = async () => {
-      try {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              const { latitude, longitude } = position.coords;
-              try {
-                const currentLocationData = await getWeatherDataByCoordinates(
-                  latitude,
-                  longitude
-                );
-                setWeatherData(currentLocationData);
-              } catch (error) {
-                console.error(
-                  "Erro ao obter dados meteorológicos da localização atual:",
-                  error
-                );
-              }
-            },
-            (error) => {
-              console.error("Erro ao obter localização:", error);
-            }
-          );
-        } else {
-          console.error("Navegador não suporta geolocalização.");
+    setSearchHistory(prevHistory =>
+      prevHistory.map(item => {
+        if (item.id === city.id) {
+          return { ...item, isFavorite: !city.isFavorite }
         }
-      } catch (error) {
-        console.error(
-          "Erro ao obter dados meteorológicos da localização atual:",
-          error
-        );
-      }
-    };
+        return item
+      })
+    )
+  }
 
-    const loadSearchHistory = () => {
-      const searchHistory = localStorage.getItem("searchHistory");
-      if (searchHistory) {
-        setSearchHistory(JSON.parse(searchHistory));
-      }
-    };
+  // Save search history to local storage
+  const saveSearchHistoryToLocalStorage = (history: City[]) => {
+    localStorage.setItem('searchHistory', JSON.stringify(history))
+  }
 
-    const loadSavedFavorites = () => {
-      const savedFavorites = localStorage.getItem("favorites");
-      if (savedFavorites) {
-        setFavorites(JSON.parse(savedFavorites));
-      }
-    };
+  // Save favorites to local storage
+  const saveFavoritesToLocalStorage = (favorites: City[]) => {
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  }
 
-    loadCurrentLocationWeather();
-    loadSearchHistory();
-    loadSavedFavorites();
-  }, []);
+  const { loading } = useSelector((state: RootState) => ({
+    loading: state.app.isLoading,
+  }))
 
   return (
-    <Box m={2}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <SearchBar onSearch={handleSearch} />
-        </Grid>
-        <Grid item xs={12}>
-          {weatherData && <WeatherCard weatherData={weatherData} />}
-        </Grid>
-        {/* <Grid item xs={12} md={6}>
-          {weeklyData && <WeeklyForecast weeklyData={weeklyData} />}
-        </Grid> */}
-        <Grid item xs={12} md={6}>
-          <Box mt={2}>
+    <>
+      {loading && <CircularProgress />}
+      <Box m={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Header />
+            <SearchBar onSearch={handleSearch} />
+          </Grid>
+          <Grid item xs={12}>
+            {weatherData && <WeatherCard weatherData={weatherData} />}
+          </Grid>
+          <Grid item xs={12} md={6}>
             <SearchHistory
               history={searchHistory}
               onSearch={handleSearch}
               onAddFavorite={handleAddFavorite}
             />
-          </Box>
-          <Box mt={2}>
-            <Favorites
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FavoriteCities
               favorites={favorites}
               onRemoveFavorite={handleRemoveFavorite}
             />
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-  );
-};
+        <Footer />
+      </Box>
+    </>
+  )
+}
 
-export default Home;
+export default Home
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  let weatherData = null
+  let searchHistory: City[] = []
+  let favorites: City[] = []
+
+  // Carregar dados do clima atual da localização atual
+  if (typeof window !== 'undefined' && navigator.geolocation) {
+    const positionPromise = new Promise<Position>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
+
+    try {
+      const position = await positionPromise
+      const { latitude, longitude } = position.coords
+      const currentLocationData = await getWeatherDataByCoordinates(
+        latitude,
+        longitude
+      )
+      weatherData = currentLocationData
+    } catch (error) {
+      console.error(
+        'Erro ao obter dados meteorológicos da localização atual:',
+        error
+      )
+    }
+  } else {
+    console.error('Navegador não suporta geolocalização.')
+  }
+
+  // Carregar histórico de busca e favoritos do local storage
+  if (typeof window !== 'undefined') {
+    const searchHistoryString = localStorage.getItem('searchHistory')
+    if (searchHistoryString) {
+      searchHistory = JSON.parse(searchHistoryString)
+    }
+
+    const favoritesString = localStorage.getItem('favorites')
+    if (favoritesString) {
+      favorites = JSON.parse(favoritesString)
+    }
+  }
+
+  return {
+    props: {
+      weatherData,
+      searchHistory,
+      favorites,
+    },
+  }
+}
