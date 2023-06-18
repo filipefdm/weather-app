@@ -1,9 +1,9 @@
 export interface City {
   id: number
   name: string
-  temperature: number
-  description: string
-  isFavorite: boolean
+  temperature?: number
+  description?: string
+  isFavorite?: boolean
 }
 
 export interface WeatherData {
