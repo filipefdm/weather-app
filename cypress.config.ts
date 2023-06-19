@@ -9,6 +9,7 @@ export default defineConfig({
     specPattern: '**/cypress/__tests__/*.spec.tsx',
     viewportHeight: 1280,
     viewportWidth: 800,
+    supportFile: false,
   },
   e2e: {
     baseUrl: 'http://localhost:3000',
