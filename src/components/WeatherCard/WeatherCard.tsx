@@ -110,7 +110,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
                     height={imageHeight}
                   />
                 </WeatherIcon>
-                <span>
+                <span data-testid="current-temperature">
                   <Temperature
                     data-testid="current-temperature"
                     value={kelvinToCelcius(main?.temp)}
@@ -131,7 +131,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
                 <sup>&deg;</sup>
               </FeelsLike>
               <HighLowContainer>
-                <WeatherDegree theme={lightTheme}>
+                <WeatherDegree data-testid="temp-min" theme={lightTheme}>
                   <ArrowDownwardIcon />
                   <Temperature
                     data-testid="temp-min"
@@ -139,7 +139,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
                   />
                   <sup>&deg;</sup>
                 </WeatherDegree>
-                <WeatherDegree theme={lightTheme}>
+                <WeatherDegree data-testid="temp-max" theme={lightTheme}>
                   <ArrowUpwardIcon />
                   <Temperature
                     data-testid="temp-max"
