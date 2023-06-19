@@ -119,9 +119,16 @@ npm run dev
 2. Em outro terminal, execute os testes de integração:
 
 ```bash
-npm run e2e
+npm run cypress:open
 ```
 
+![Teste E2E - FavoritesCities](.github/favorite-cities-e2e.png)
+![Teste E2E - Footer](.github/footer-e2e.png)
+![Teste E2E - Header](.github/header-e2e.png)
+![Teste E2E - SearchBar](.github/searchbar-e2e.png)
+![Teste E2E - SearchHistory](.github/searchhistory-e2e.png)
+![Teste E2E - ToggleSwitch](.github/toggleswitch-e2e.png)
+![Teste E2E - WeatherCard](.github/weathercard-e2e.png)
 ---
 
 Feito com 💜 por [Filipe Motta](https://github.com/filipefdm) 😊
