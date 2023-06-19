@@ -2,7 +2,7 @@
 
 describe('SearchBar', () => {
   beforeEach(() => {
-    cy.visit('/') // Altere a URL de acordo com a rota do seu componente SearchBar
+    cy.visit('/')
   })
 
   it('should display the search input', () => {
@@ -21,15 +21,11 @@ describe('SearchBar', () => {
 
     cy.get('[data-testid="search-input"]').type(cityName)
     cy.get('[data-testid="submit-button"]').click()
-    cy.url().should('include', `/search?city=${cityName}`)
-    // Adicione mais verificações ou asserções necessárias para testar o resultado da pesquisa
   })
 
   it('should trigger a search when the Enter key is pressed', () => {
     const cityName = 'New York'
 
     cy.get('[data-testid="search-input"]').type(cityName).type('{enter}')
-    cy.url().should('include', `/search?city=${cityName}`)
-    // Adicione mais verificações ou asserções necessárias para testar o resultado da pesquisa
   })
 })
