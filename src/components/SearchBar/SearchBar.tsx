@@ -54,6 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           value={city}
           onChange={e => dispatch(setCity(e.target.value))}
           onKeyDown={handleKeyPress}
+          data-testid="search-input"
         />
         <Button
           variant="contained"
@@ -62,6 +63,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           disabled={!city.trim()}
           component="span"
           sx={{ borderRadius: '5rem', mr: '1rem' }}
+          data-testid="submit-button"
         >
           <LocationSearchingIcon />
         </Button>
