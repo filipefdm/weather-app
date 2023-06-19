@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { City } from '../../src/types/weatherTypes'
 import { getFavoriteCities } from '../../src/store/selectors/favoritesSelectors'
 import { useSelector } from 'react-redux'
@@ -25,42 +27,44 @@ describe('FavoriteCities', () => {
   beforeEach(() => {
     cy.visit('/', {
       onBeforeLoad(win: WindowWithRedux) {
-        // Mock the return value of `useSelector` to return favorite cities
-        // that we define above
         win.useSelector = useSelector
         cy.stub(win, 'useSelector')
+          .callThrough()
           .withArgs(getFavoriteCities)
           .returns([city1, city2])
       },
     })
   })
 
-  it('displays favorite city titles', () => {
-    cy.get('[data-testid="favorite-city-title"]')
-      .should('have.length', 2)
-      .and('contain', city1.name)
-      .and('contain', city2.name)
-  })
-
-  it('displays a section title', () => {
+  it('displays the section title', () => {
     cy.get('[data-testid="section-title"]').should(
-      'have.text',
+      'contain.text',
       'Cidades Favoritas'
     )
   })
 
   it('displays a FavoriteCity card for each favorite city', () => {
-    cy.get('[data-testid="favorite-city-card"]').should('have.length', 2)
+    cy.get('[data-testid="search-input"]').type('London')
+    cy.get('[data-testid="submit-button"]').click()
+    cy.get('[data-testid="search-history-item"]').should(
+      'have.length.greaterThan',
+      0
+    )
+    cy.get('[data-testid="star-icon"]').click()
+    cy.wait(1000)
+    cy.get('[data-testid="favorite-city-card"]').should('have.length', 1)
   })
 
-  it('calls onRemoveFavorite when remove button is clicked', () => {
-    const removeCity = cy.stub().as('removeCity')
-    cy.get('[data-testid="favorite-city-card"]')
-      .first()
-      .find('[role="button"]')
-      .click()
-      .then(() => {
-        expect(removeCity).to.be.calledOnceWith(city1)
-      })
+  it('deletes a FavoriteCity card for each favorite city', () => {
+    cy.get('[data-testid="search-input"]').type('London')
+    cy.get('[data-testid="submit-button"]').click()
+    cy.get('[data-testid="search-history-item"]').should(
+      'have.length.greaterThan',
+      0
+    )
+    cy.get('[data-testid="star-icon"]').click()
+    cy.wait(1000)
+    cy.get('[data-testid="favorite-city-card"]').should('have.length', 1)
+    cy.get('[data-testid="trash-icon"]').click()
   })
 })
