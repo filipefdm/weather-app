@@ -1,7 +1,21 @@
 {
-  "city": "São Paulo",
-  "temperature": 25,
-  "humidity": 70,
-  "wind_speed": 10,
-  "forecast": "scattered clouds"
+  "name": "New York",
+  "weather": [
+    {
+      "description": "nuvens dispersas"
+    }
+  ],
+  "main": {
+    "temp": 26,
+    "feels_like": 20,
+    "temp_min": 20,
+    "temp_max": 24,
+    "humidity": 70
+  },
+  "wind": {
+    "speed": 10
+  },
+  "pressure": {
+    "pressure": 1012
+  }
 }
