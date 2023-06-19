@@ -16,6 +16,7 @@ const ToggleSwitch: React.FC<IToggleSwitchProps> = props => {
         setToggled(checked => !checked)
         props.onClick()
       }}
+      data-testid="toggle-switch"
     >
       {toggled && <span className="on">C</span>}
       {!toggled && <span className="off">F</span>}
