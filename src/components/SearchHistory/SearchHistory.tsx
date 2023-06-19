@@ -29,7 +29,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
 
   return (
     <SearchHistoryContainer theme={lightTheme}>
-      <SectionTitle theme={lightTheme}>
+      <SectionTitle data-testid="section-history-title" theme={lightTheme}>
         Histórico de Cidades Pesquisadas
       </SectionTitle>
       <AnimatePresence>
@@ -64,6 +64,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
                     size="small"
                     onClick={() => onSearch(city.name)}
                     sx={{ mr: 1 }}
+                    data-testid="search-history-item"
                   >
                     Exibir
                   </Button>
@@ -73,6 +74,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
                     onClick={() => handleAddFavorite(city)}
                     sx={{ ml: 1 }}
                     disabled={isFavorite}
+                    data-testid="search-history-item"
                   >
                     <StarBorderIcon sx={{ mr: 0.5 }} />
                   </Button>
