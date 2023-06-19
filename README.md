@@ -83,7 +83,7 @@ Para começar com o Weather Forecast App, siga os seguintes passos:
 - Clique em uma cidade nos resultados da pesquisa para visualizar os detalhes do clima atual.
 - Use o botão de alternância de unidade de temperatura para mudar entre Celsius e Fahrenheit.
 - Clique no botão "☆" para adicionar uma cidade aos favoritos.
-- Clique em uma cidade favorita na lista de favoritos para ver os detalhes do clima.
+- Clique em uma cidade pesquisada na lista de favoritos para ver os detalhes do clima.
 - Remova uma cidade dos favoritos clicando no botão "🗑".
 
 ## Contribuição
