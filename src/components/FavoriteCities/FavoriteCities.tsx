@@ -19,9 +19,12 @@ const FavoriteCities: React.FC<{
       transition={{ duration: 0.5 }}
     >
       <FavoritesCitiesContainer theme={lightTheme}>
-        <SectionTitle theme={lightTheme}>Cidades Favoritas</SectionTitle>
+        <SectionTitle data-testid="section-title" theme={lightTheme}>
+          Cidades Favoritas
+        </SectionTitle>
         {favoritesCities.map((favorite: City) => (
           <FavoriteCity
+            data-testid="favorite-city-card"
             key={favorite.id}
             favorite={favorite}
             onRemoveFavorite={onRemoveFavorite}
