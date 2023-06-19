@@ -184,7 +184,6 @@ export const getServerSideProps: GetServerSideProps<
 > = async () => {
   const city = 'Jaboatão dos Guararapes'
 
-  // Lógica para buscar os dados do clima no servidor
   const weatherData = await getWeatherData(city)
 
   return {

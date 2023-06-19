@@ -4,7 +4,6 @@ import darkBg from '../assets/darkBg.svg'
 
 declare module '@mui/material/styles' {
   interface Theme {
-    // Adicione suas propriedades personalizadas aqui
     appTitleColor: string
     backgroundImage: string
     backgroundGradient: {
@@ -32,7 +31,6 @@ declare module '@mui/material/styles' {
     smallIconTextColor: string
   }
 
-  // Permite que o tema seja personalizado
   interface ThemeOptions {
     appTitleColor?: string
     backgroundImage?: string
@@ -62,7 +60,6 @@ declare module '@mui/material/styles' {
   }
 }
 
-// Crie um objeto de tema personalizado estendendo o tema padrão
 const lightTheme = createTheme({
   appTitleColor: '#2F5D8A',
   backgroundImage: lightBg,
