@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Box, Grid } from '@mui/material'
 
@@ -8,15 +8,15 @@ import {
   getWeatherDataByCoordinates,
 } from '../services/weatherApi'
 
-import Header from '../components/Header/Header'
-import SearchBar from '../components/SearchBar/SearchBar'
-import WeatherCard from '../components/WeatherCard/WeatherCard'
-import SearchHistory from '../components/SearchHistory/SearchHistory'
 import FavoriteCities from '../components/FavoriteCities/FavoriteCities'
 import Footer from '../components/Footer/Footer'
+import Header from '../components/Header/Header'
+import SearchBar from '../components/SearchBar/SearchBar'
+import SearchHistory from '../components/SearchHistory/SearchHistory'
+import WeatherCard from '../components/WeatherCard/WeatherCard'
 
-import { WeatherData, City } from '../types/weatherTypes'
 import Head from 'next/head'
+import { City, WeatherData } from '../types/weatherTypes'
 
 interface HomeProps {
   weatherData: WeatherData | null
@@ -62,24 +62,24 @@ const Home: React.FC = () => {
       try {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            async position => {
+            async (position) => {
               const { latitude, longitude } = position.coords
               try {
                 const currentLocationData = await getWeatherDataByCoordinates(
                   latitude,
-                  longitude
+                  longitude,
                 )
                 setWeatherData(currentLocationData)
               } catch (error) {
                 console.error(
                   'Erro ao obter dados meteorológicos da localização atual:',
-                  error
+                  error,
                 )
               }
             },
-            error => {
+            (error) => {
               console.error('Erro ao obter localização:', error)
-            }
+            },
           )
         } else {
           console.error('Navegador não suporta geolocalização.')
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
       } catch (error) {
         console.error(
           'Erro ao obter dados meteorológicos da localização atual:',
-          error
+          error,
         )
       }
     }
@@ -108,11 +108,11 @@ const Home: React.FC = () => {
       }
 
       const existingCity = searchHistory.find(
-        item => item.name === newCity.name
+        (item) => item.name === newCity.name,
       )
 
       if (!existingCity) {
-        setSearchHistory(prevHistory => [...prevHistory, newCity])
+        setSearchHistory((prevHistory) => [...prevHistory, newCity])
         saveSearchHistoryToLocalStorage([...searchHistory, newCity]) // Salvar no localStorage
       }
 
@@ -125,37 +125,37 @@ const Home: React.FC = () => {
   // Handle add favorite event
   const handleAddFavorite = (city: City) => {
     if (city.isFavorite) {
-      const updatedFavorites = favorites.filter(item => item.id !== city.id)
+      const updatedFavorites = favorites.filter((item) => item.id !== city.id)
       setFavorites(updatedFavorites)
       saveFavoritesToLocalStorage(updatedFavorites) // Save to local storage
     } else {
-      setFavorites(prevFavorites => [...prevFavorites, city])
+      setFavorites((prevFavorites) => [...prevFavorites, city])
       saveFavoritesToLocalStorage([...favorites, city]) // Save to local storage
     }
 
-    setSearchHistory(prevHistory =>
-      prevHistory.map(item => {
+    setSearchHistory((prevHistory) =>
+      prevHistory.map((item) => {
         if (item.id === city.id) {
           return { ...item, isFavorite: !city.isFavorite }
         }
         return item
-      })
+      }),
     )
   }
 
   // Handle remove favorite event
   const handleRemoveFavorite = (city: City) => {
-    const updatedFavorites = favorites.filter(item => item.id !== city.id)
+    const updatedFavorites = favorites.filter((item) => item.id !== city.id)
     setFavorites(updatedFavorites)
     saveFavoritesToLocalStorage(updatedFavorites) // Save to local storage
 
-    setSearchHistory(prevHistory =>
-      prevHistory.map(item => {
+    setSearchHistory((prevHistory) =>
+      prevHistory.map((item) => {
         if (item.id === city.id) {
           return { ...item, isFavorite: !city.isFavorite }
         }
         return item
-      })
+      }),
     )
   }
 
@@ -225,14 +225,14 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
         const { latitude, longitude } = position.coords
         const currentLocationData = await getWeatherDataByCoordinates(
           latitude,
-          longitude
+          longitude,
         )
         weatherData = currentLocationData
       } catch (error) {
         if (error instanceof Error) {
           console.error(
             'Erro ao obter dados meteorológicos da localização atual:',
-            error.message
+            error.message,
           )
         } else {
           console.error('Erro desconhecido:', error)

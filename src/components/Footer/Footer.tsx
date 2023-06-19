@@ -1,5 +1,5 @@
-import React from "react";
-import { FooterContainer } from "./styles";
+import React from 'react'
+import { FooterContainer } from './styles'
 
 const Footer: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         Developed By <a href="https://github.com/filipefdm">Filipe Motta</a>
       </p>
     </FooterContainer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

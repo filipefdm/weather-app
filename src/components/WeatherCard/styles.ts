@@ -13,7 +13,7 @@ export const WeatherContainer = styled('div')(
     '&:hover': {
       boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
     },
-  })
+  }),
 )
 
 export const SectionTitle = styled('h2')(({ theme }: { theme: Theme }) => ({

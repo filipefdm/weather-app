@@ -1,3 +1,4 @@
+import React from 'react'
 import { City } from '../../types/weatherTypes'
 import { FavoritesCitiesContainer, SectionTitle } from './styles'
 import { motion } from 'framer-motion'

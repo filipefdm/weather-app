@@ -1,5 +1,5 @@
 import { styled } from '@mui/system'
-import { Theme } from '@mui/material';
+import { Theme } from '@mui/material'
 
 export const SearchElement = styled('div')(({ theme }: { theme: Theme }) => ({
   position: 'relative',
@@ -11,7 +11,7 @@ export const SearchElement = styled('div')(({ theme }: { theme: Theme }) => ({
   display: 'flex',
   alignItems: 'center',
   zIndex: 1,
-}));
+}))
 
 export const SearchInput = styled('input')(({ theme }: { theme: Theme }) => ({
   flex: 1,
@@ -35,24 +35,26 @@ export const SearchIcon = styled('svg')({
   fill: '#4a6fa1',
 })
 
-export const LocationButton = styled('button')(({ theme }: { theme: Theme }) => ({
-  border: 'none',
-  cursor: 'pointer',
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  borderRadius: '5rem',
-  padding: theme.spacing(1, 2),
-  marginRight: '1rem',
-  transition: 'background-color 0.3s ease',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-  },
-  '&:disabled': {
-    cursor: 'not-allowed',
-    backgroundColor: theme.palette.grey[300],
-    color: theme.palette.text.disabled,
-  },
-}));
+export const LocationButton = styled('button')(
+  ({ theme }: { theme: Theme }) => ({
+    border: 'none',
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    borderRadius: '5rem',
+    padding: theme.spacing(1, 2),
+    marginRight: '1rem',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
+      backgroundColor: theme.palette.grey[300],
+      color: theme.palette.text.disabled,
+    },
+  }),
+)
 
 export const LocationIcon = styled('svg')({
   marginRight: '1.2rem',
@@ -70,7 +72,7 @@ export const SearchResult = styled('div')(({ theme }: { theme: Theme }) => ({
   top: '3.35rem',
   borderRadius: '5px',
   overflow: 'hidden',
-}));
+}))
 
 export const SuggestionItem = styled('a')(({ theme }: { theme: Theme }) => ({
   color: '#2079c9',
@@ -84,10 +86,10 @@ export const SuggestionItem = styled('a')(({ theme }: { theme: Theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-}));
+}))
 
 export const Outlined = styled('div')(({ theme }: { theme: Theme }) => ({
   border: `1px solid ${theme.palette.primary.main}`,
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(0.5),
-}));
+}))

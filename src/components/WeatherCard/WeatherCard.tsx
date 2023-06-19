@@ -1,3 +1,4 @@
+import React from 'react'
 import Image from 'next/image'
 
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
@@ -32,11 +33,12 @@ import Temperature from './Temperature'
 import ToggleSwitch from '../ui/ToggleSwitch/ToggleSwitch'
 
 import { AppDispatch } from '../../store/store'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { changeTempUnit } from '../../store/slices/appReducer'
-import { getTempUnit } from '@/store/selectors/appSelectors'
 
 import { lightTheme } from '../../styles/theme'
+import { GetServerSideProps } from 'next'
+import { getWeatherData } from '@/services/weatherApi'
 
 interface WeatherCardProps {
   weatherData: CurrentWeather
@@ -76,7 +78,10 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
       variants={cardVariants}
       transition={{ duration: 0.5 }}
     >
-      <WeatherContainer theme={lightTheme}>
+      <WeatherContainer
+        data-testid="current-weather-container"
+        theme={lightTheme}
+      >
         <div
           style={{
             display: 'flex',
@@ -95,7 +100,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
         <CurrentWeatherContainer>
           <motion.div variants={statusVariants} transition={{ duration: 0.5 }}>
             <CurrentWeatherStatus>
-              <h4>{name}</h4>
+              <h4 data-testid="location-name">{name}</h4>
               <div style={{ display: 'flex' }}>
                 <WeatherIcon>
                   <Image
@@ -106,11 +111,16 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
                   />
                 </WeatherIcon>
                 <span>
-                  <Temperature value={kelvinToCelcius(main?.temp)} />
+                  <Temperature
+                    data-testid="current-temperature"
+                    value={kelvinToCelcius(main?.temp)}
+                  />
                   <sup>&deg;</sup>
                 </span>
               </div>
-              <h6>{weatherData.weather?.[0].description}</h6>
+              <h6 data-testid="weather-description">
+                {weatherData.weather?.[0].description}
+              </h6>
             </CurrentWeatherStatus>
           </motion.div>
           <motion.div variants={infoVariants} transition={{ duration: 0.5 }}>
@@ -123,12 +133,18 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
               <HighLowContainer>
                 <WeatherDegree theme={lightTheme}>
                   <ArrowDownwardIcon />
-                  <Temperature value={kelvinToCelcius(main.temp_min)} />
+                  <Temperature
+                    data-testid="temp-min"
+                    value={kelvinToCelcius(main?.temp_min)}
+                  />
                   <sup>&deg;</sup>
                 </WeatherDegree>
                 <WeatherDegree theme={lightTheme}>
                   <ArrowUpwardIcon />
-                  <Temperature value={kelvinToCelcius(main.temp_max)} />
+                  <Temperature
+                    data-testid="temp-max"
+                    value={kelvinToCelcius(main?.temp_max)}
+                  />
                   <sup>&deg;</sup>
                 </WeatherDegree>
               </HighLowContainer>
@@ -137,21 +153,21 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
                   <WaterDropIcon />
                   Humidity
                 </div>
-                <span>{main?.humidity}%</span>
+                <span data-testid="humidity">{main?.humidity}%</span>
               </InfoRow>
               <InfoRow theme={lightTheme}>
                 <div>
                   <AirIcon />
                   Wind
                 </div>
-                <span>{windSpeed} km/h</span>
+                <span data-testid="wind-speed">{windSpeed} km/h</span>
               </InfoRow>
               <InfoRow theme={lightTheme}>
                 <div>
                   <ExploreIcon />
                   Pressure
                 </div>
-                <span>{main?.pressure} hPa</span>
+                <span data-testid="pressure">{main?.pressure} hPa</span>
               </InfoRow>
             </CurrentWeatherInfo>
           </motion.div>
@@ -162,3 +178,18 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weatherData }) => {
 }
 
 export default WeatherCard
+
+export const getServerSideProps: GetServerSideProps<
+  WeatherCardProps
+> = async () => {
+  const city = 'Jaboatão dos Guararapes'
+
+  // Lógica para buscar os dados do clima no servidor
+  const weatherData = await getWeatherData(city)
+
+  return {
+    props: {
+      weatherData,
+    },
+  }
+}

@@ -1,26 +1,26 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface SearchHistoryState {
-  searchHistory: string[];
+  searchHistory: string[]
 }
 
 const initialState: SearchHistoryState = {
   searchHistory: [],
-};
+}
 
 export const searchHistorySlice = createSlice({
-  name: "searchHistory",
+  name: 'searchHistory',
   initialState,
   reducers: {
     addToSearchHistory: (state, action: PayloadAction<string>) => {
-      state.searchHistory.unshift(action.payload);
+      state.searchHistory.unshift(action.payload)
       if (state.searchHistory.length > 5) {
-        state.searchHistory.pop();
+        state.searchHistory.pop()
       }
     },
   },
-});
+})
 
-export const { addToSearchHistory } = searchHistorySlice.actions;
+export const { addToSearchHistory } = searchHistorySlice.actions
 
-export default searchHistorySlice.reducer;
+export default searchHistorySlice.reducer

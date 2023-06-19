@@ -1,6 +1,6 @@
-import { styled } from "@mui/system";
+import { styled } from '@mui/system'
 
-export const FooterContainer = styled("footer")`
+export const FooterContainer = styled('footer')`
   p {
     padding: 1rem 0;
     font-size: 1rem;
@@ -10,4 +10,4 @@ export const FooterContainer = styled("footer")`
       color: #1a5a73;
     }
   }
-`;
+`

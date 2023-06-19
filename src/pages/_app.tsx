@@ -2,8 +2,6 @@ import '../styles/globals.css'
 import { AppProps } from 'next/app'
 import { Poppins } from 'next/font/google'
 
-import { appWithTranslation } from 'next-i18next'
-
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
@@ -36,4 +34,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   )
 }
 
-export default appWithTranslation(MyApp)
+export default MyApp

@@ -5,5 +5,5 @@ const getFavoritesCities = (state: RootState) => state.favorites.favorites
 
 export const getFavoriteCities = createSelector(
   getFavoritesCities,
-  favoritesCities => favoritesCities
+  (favoritesCities) => favoritesCities,
 )

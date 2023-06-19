@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
@@ -28,14 +29,17 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
   }
 
   return (
-    <SearchHistoryContainer theme={lightTheme}>
+    <SearchHistoryContainer
+      data-testid="search-history-item"
+      theme={lightTheme}
+    >
       <SectionTitle data-testid="section-history-title" theme={lightTheme}>
         Histórico de Cidades Pesquisadas
       </SectionTitle>
       <AnimatePresence>
-        {history.map(city => {
+        {history.map((city) => {
           const isFavorite: boolean = favorites.some(
-            (favoriteCity: City) => favoriteCity.id === city.id
+            (favoriteCity: City) => favoriteCity.id === city.id,
           )
 
           return (
@@ -56,9 +60,14 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
                 borderRadius={4}
                 boxShadow={1}
                 bgcolor="transparent"
+                data-testid="search-history-item"
               >
                 <Typography variant="inherit">{city.name}</Typography>
-                <Box display="flex" alignItems="center">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  data-testid="search-history-item"
+                >
                   <Button
                     variant="outlined"
                     size="small"
@@ -76,7 +85,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ history, onSearch }) => {
                     disabled={isFavorite}
                     data-testid="search-history-item"
                   >
-                    <StarBorderIcon sx={{ mr: 0.5 }} />
+                    <StarBorderIcon data-testid="star-icon" sx={{ mr: 0.5 }} />
                   </Button>
                 </Box>
               </Box>

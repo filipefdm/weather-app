@@ -3,17 +3,17 @@ import { lightTheme } from '../../../styles/theme'
 import { Slider, Switch } from './styles'
 
 interface IToggleSwitchProps {
-  onClick: Function
+  onClick: () => void
 }
 
-const ToggleSwitch: React.FC<IToggleSwitchProps> = props => {
+const ToggleSwitch: React.FC<IToggleSwitchProps> = (props) => {
   const [toggled, setToggled] = useState(false)
 
   return (
     <Switch
       theme={lightTheme}
       onClick={() => {
-        setToggled(checked => !checked)
+        setToggled((checked) => !checked)
         props.onClick()
       }}
       data-testid="toggle-switch"
@@ -25,6 +25,7 @@ const ToggleSwitch: React.FC<IToggleSwitchProps> = props => {
         style={{
           transform: toggled ? ' translateX(28px)' : ' translateX(0px)',
         }}
+        data-testid="toggle-switch"
       ></Slider>
     </Switch>
   )

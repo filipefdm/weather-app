@@ -1,3 +1,4 @@
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppDispatch } from '../../store/store'
 import { setCity, clearCity } from '../../store/slices/searchBarSlice'
@@ -52,7 +53,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           theme={lightTheme}
           placeholder="Digite uma cidade"
           value={city}
-          onChange={e => dispatch(setCity(e.target.value))}
+          onChange={(e) => dispatch(setCity(e.target.value))}
           onKeyDown={handleKeyPress}
           data-testid="search-input"
         />

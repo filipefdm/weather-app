@@ -11,7 +11,6 @@ import githubIcon from '../../assets/github.svg'
 import { lightTheme } from '../../styles/theme'
 
 const Header: React.FC = () => {
-
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0 },

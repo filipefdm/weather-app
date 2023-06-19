@@ -15,7 +15,7 @@ const searchBarSlice = createSlice({
     setCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload
     },
-    clearCity: state => {
+    clearCity: (state) => {
       state.city = ''
     },
   },

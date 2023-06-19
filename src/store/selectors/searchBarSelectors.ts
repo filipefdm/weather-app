@@ -5,5 +5,5 @@ export const getSearchBarState = (state: RootState) => state.searchBar
 
 export const getSearchBarCity = createSelector(
   getSearchBarState,
-  searchBarState => searchBarState.city
+  (searchBarState) => searchBarState.city,
 )

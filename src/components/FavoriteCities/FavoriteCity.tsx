@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import { City } from '../../types/weatherTypes'
 import { useDispatch } from 'react-redux'
@@ -29,6 +30,7 @@ export const FavoriteCity: React.FC<FavoriteCityProps> = ({ favorite }) => {
         boxShadow: 1,
         bgcolor: '#f8f8f8',
       }}
+      data-testid="favorite-city-card"
     >
       <Typography variant="inherit" sx={{ marginRight: 2 }}>
         {favorite.name}
@@ -39,7 +41,7 @@ export const FavoriteCity: React.FC<FavoriteCityProps> = ({ favorite }) => {
         onClick={handleRemoveFavorite}
         sx={{ marginLeft: 'auto' }}
       >
-        <DeleteIcon />
+        <DeleteIcon data-testid="trash-icon" />
       </Button>
     </Box>
   )
