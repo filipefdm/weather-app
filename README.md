@@ -75,7 +75,7 @@ Para começar com o Weather Forecast App, siga os seguintes passos:
    npm run dev
    ```
 
-6. Abra o navegador e acesse `http://localhost:3000` para utilizar o Weather Forecast App.
+6. Abra o navegador e acesse `http://localhost:3000` para utilizar o Weather App.
 
 ## Utilização
 
