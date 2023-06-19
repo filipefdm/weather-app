@@ -1,0 +1,7 @@
+{
+  "city": "São Paulo",
+  "temperature": 25,
+  "humidity": 70,
+  "wind_speed": 10,
+  "forecast": "scattered clouds"
+}
